@@ -1,9 +1,9 @@
---Make and fight robots against each other
---Main function is printRobot round_
+--Make and fight turtles against each other
+--Main function is printTurtle round_
 
---How to make robots. robot and three stats
-robot (name,attack,hp) = \message -> message (name,attack,hp)
-killerRobot = robot ("Kill3r",25,200)
+--How to make turtles. turtle and three stats
+turtle (name,attack,hp) = \message -> message (name,attack,hp)
+killerTurtle = turtle ("Kill3r", 25, 200)
 
 --Wildcard for getters and setters below
 name (n,_,_) = n
@@ -11,49 +11,49 @@ attack (_,n,_) = n
 hp (_,_,n) = n
 
 --Setters and getters for three stats
-getName aRobot = aRobot name
-getAttack aRobot = aRobot attack
-getHP aRobot  = aRobot hp
+getName aTurtle = aTurtle name
+getAttack aTurtle = aTurtle attack
+getHP aTurtle  = aTurtle hp
 
-setName aRobot newName = aRobot (\(n,a,h) -> robot (newName,a,h))
-setAttack aRobot newAttack = aRobot (\(n,a,h) -> robot (n,newAttack,h))
-setHP aRobot newHP = aRobot (\(n,a,h) -> robot (n,a,newHP))
+setName aTurtle newName = aTurtle (\(n,a,h) -> turtle (newName,a,h))
+setAttack aTurtle newAttack = aTurtle (\(n,a,h) -> turtle (n,newAttack,h))
+setHP aTurtle newHP = aTurtle (\(n,a,h) -> turtle (n,a,newHP))
 
---Modify the killerRobot with new name, attack, and HP
-nicerRobot = setName killerRobot "kitty" 
-gentlerRobot = setAttack killerRobot 5 
-softerRobot = setHP killerRobot 50
+--Modify the killerTurtle with new name, attack, and HP
+nicerTurtle = setName killerTurtle "kitty" 
+gentlerTurtle = setAttack killerTurtle 5 
+softerTurtle = setHP killerTurtle 50
 
---Display the robot stats
-printRobot aRobot = aRobot (\(n,a,h) -> n ++ " attack:" ++ (show a) ++ " hp:" ++ (show h))
+--Display the turtle stats
+printTurtle aTurtle = aTurtle (\(n,a,h) -> n ++ " attack:" ++ (show a) ++ " hp:" ++ (show h))
 
 --Subtract damage from hp
-damage aRobot attackDamage = aRobot (\(n,a,h) -> robot (n,a,(h - attackDamage)))
+damage aTurtle attackDamage = aTurtle (\(n,a,h) -> turtle (n,a,(h - attackDamage)))
 
---Compare two robots. Damage takes the robot and their attack,
+--Compare two turtles. Damage takes the turtle and their attack,
 -- and compares it to the defender and their attack
-fight aRobot defender = damage defender attack
-    where attack = if (getHP aRobot) > 0
-                               then getAttack aRobot 
+fight aTurtle defender = damage defender attack
+    where attack = if (getHP aTurtle) > 0
+                               then getAttack aTurtle 
                                else 0
 
---Add defender robots
-gentleGiant = robot ("Mr. Friendly", 10, 300)
-fastRobot = robot ("speedy", 15, 40) 
-slowRobot = robot ("slowpoke",20,30)
+--Add defender turtles
+gentleTurtle = turtle ("Mr. Friendly", 10, 300)
+fastTurtle = turtle ("speedy", 15, 40) 
+slowTurtle = turtle ("slowpoke",20,30)
 
 --Three rounds of fighting
-gentleGiantRound1 = fight killerRobot gentleGiant
-killerRobotRound1 = fight gentleGiant killerRobot
-gentleGiantRound2 = fight killerRobotRound1 gentleGiantRound1
-killerRobotRound2 = fight gentleGiantRound1 killerRobotRound1
-gentleGiantRound3 = fight killerRobotRound2 gentleGiantRound2
-killerRobotRound3 = fight gentleGiantRound2 killerRobotRound2
+gentleTurtleRound1 = fight killerTurtle gentleTurtle
+killerTurtleRound1 = fight gentleTurtle killerTurtle
+gentleTurtleRound2 = fight killerTurtleRound1 gentleTurtleRound1
+killerTurtleRound2 = fight gentleTurtleRound1 killerTurtleRound1
+gentleTurtleRound3 = fight killerTurtleRound2 gentleTurtleRound2
+killerTurtleRound3 = fight gentleTurtleRound2 killerTurtleRound2
 
 --Three rounds of fighting to demonstrate state. Does not matter what order these are called!
-slowRobotRound1 = fight fastRobot slowRobot 
-fastRobotRound1 = fight slowRobotRound1 fastRobot
-slowRobotRound2 = fight fastRobotRound1 slowRobotRound1 
-fastRobotRound2 = fight slowRobotRound2 fastRobotRound1
-slowRobotRound3 = fight fastRobotRound2 slowRobotRound2
-fastRobotRound3 = fight slowRobotRound3 fastRobotRound2
+slowTurtleRound1 = fight fastTurtle slowTurtle 
+fastTurtleRound1 = fight slowTurtleRound1 fastTurtle
+slowTurtleRound2 = fight fastTurtleRound1 slowTurtleRound1 
+fastTurtleRound2 = fight slowTurtleRound2 fastTurtleRound1
+slowTurtleRound3 = fight fastTurtleRound2 slowTurtleRound2
+fastTurtleRound3 = fight slowTurtleRound3 fastTurtleRound2

@@ -1,6 +1,6 @@
--- Mastermind -----------------------------------------
--- A game of Mastermind from Week 2 of CIS 194 2013
--- Call the solve function with a list of peg colors and see how many moves are needed to win
+{- Mastermind
+A game of Mastermind from Week 2 of CIS 194 2013
+Call the solve function with a list of peg colors and see how many moves are needed to win -}
 
 {-# OPTIONS_GHC -Wall #-}
 
