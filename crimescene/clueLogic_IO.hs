@@ -201,6 +201,13 @@ isGuiltyBelnap bodyFoundBelnap hasMotiveBelnap atTheSceneBelnap hasMurderWeaponB
   hasMurderWeaponBelnap `_and`
   atTheSceneBelnap
 
+isGuiltyIO :: String -> String -> String -> String -> Bool
+isGuiltyIO bodyfound motive murderweapon atscene = 
+  read bodyfound `_and`
+  read motive `_and`
+  read murderweapon `_and`
+  read atscene
+
 --Clue Command Line
 main :: IO ()
 main = do
@@ -230,7 +237,7 @@ main = do
         motive <- promptLine "Was there a motive? "
         murderweapon <- promptLine "Was there a weapon? "
         atscene <- promptLine "Was the suspect at the scene? "
-        putStrLn $ show $ isGuiltyIO bodyfound motive murderweapon atscene
+        print $ isGuiltyIO bodyfound motive murderweapon atscene
         linebreak >> main
   when (response == "2") $ do
     mappedString [guiltString ++ "Ternary Logic? ",
@@ -253,12 +260,7 @@ main = do
         uncertainGuilt = putStrLn "Therefore, the suspect's guilt is more uncertain."
         linebreak = putStrLn ("Change the facts of the murder in the codebase to see different outcomes.\n" ++
                                               "-------------------------------------------------------------------------\n\n")
-        isGuiltyIO bodyFound hasMotive hasWeapon atScene = 
-          read (bodyFound) &&
-          read (hasMotive) &&
-          read (hasWeapon) &&
-          read (atScene)
-
+        
 promptLine :: String -> IO String
 promptLine prompt = do
     putStr prompt

@@ -212,26 +212,10 @@ main = do
                                 "4. Belnap / Four-Valued / Relevance Logic"]
   response <- promptLine "Pick a logic [1-4] from the above list, or anything else to exit: "
   when (response == "1") $ do
-      linebreak
-      mappedString ["I am trying out IO. Do you want automatic or manual?",
-                            "1. Automatic",
-                            "2. Manual"]
-      response <- promptLine "Pick one or two from the above: "
-      when (response == "1") $ do
-        linebreak
-        mappedString [guiltString ++ "Boolean Logic? ",
+    mappedString [guiltString ++ "Boolean Logic? ",
                                   show $ isGuilty bodyFoundBool hasMotiveBool atTheSceneBool hasMurderWeaponBool,
                                   "All four conditions were true. Therefore, the suspect is guilty."]
-        linebreak >> main
-      when (response == "2") $ do
-        linebreak
-        mappedString ["Answer the following questions with True or False."]
-        bodyfound <- promptLine "Was a body found? "
-        motive <- promptLine "Was there a motive? "
-        murderweapon <- promptLine "Was there a weapon? "
-        atscene <- promptLine "Was the suspect at the scene? "
-        putStrLn $ show $ isGuiltyIO bodyfound motive murderweapon atscene
-        linebreak >> main
+    linebreak >> main
   when (response == "2") $ do
     mappedString [guiltString ++ "Ternary Logic? ",
                                   show $ isGuiltyKleene bodyFoundKleene hasMotiveKleene hasMurderWeaponKleene atTheSceneKleene,
@@ -253,11 +237,6 @@ main = do
         uncertainGuilt = putStrLn "Therefore, the suspect's guilt is more uncertain."
         linebreak = putStrLn ("Change the facts of the murder in the codebase to see different outcomes.\n" ++
                                               "-------------------------------------------------------------------------\n\n")
-        isGuiltyIO bodyFound hasMotive hasWeapon atScene = 
-          read (bodyFound) &&
-          read (hasMotive) &&
-          read (hasWeapon) &&
-          read (atScene)
 
 promptLine :: String -> IO String
 promptLine prompt = do

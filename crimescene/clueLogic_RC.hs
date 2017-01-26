@@ -1,12 +1,12 @@
 {-
 Clue is a command line application that uses a fictional murder to show the result of different logics.
-The below example has four main functions and four logics with the following scenario:
+The below example has one main function isGuilty and four logics with the following scenario:
 - bodyFound- a body was found
 - hasMotive- the suspect has a motive
 - hasMurderWeapon- a murder weapon was found
 - atSceneOfCrime- the suspect was at the crimescene
 
-The user can change a function's result to see how probability and guilt can change with each method.
+The user can change the values within the Bool logic.
 To use Clue, load with ghci, call the main function, and follow the prompts.
 -}
 
@@ -108,12 +108,12 @@ witnessKleene = F
 atTheSceneKleene :: Kleene
 atTheSceneKleene = atSceneOfCrime hasAlibiKleene witnessKleene
 
-isGuiltyKleene :: Logic a => a -> a -> a -> a -> a
+{-isGuiltyKleene :: Logic a => a -> a -> a -> a -> a
 isGuiltyKleene bodyFoundKleene hasMotiveKleene hasMurderWeaponKleene atTheSceneKleene = 
   bodyFoundKleene `_and`
   hasMotiveKleene `_and`
   hasMurderWeaponKleene `_and`
-  atTheSceneKleene
+  atTheSceneKleene-}
 
 --Probabilistic Logic
 data Prob = Prob Double deriving Show
@@ -147,12 +147,12 @@ onPersonProb = Prob 0.999
 hasMurderWeaponProb :: Prob
 hasMurderWeaponProb = hasMurderWeapon weaponIDedProb onPersonProb
 
-isGuiltyProb :: Logic a => a -> a -> a -> a -> a
+{-isGuiltyProb :: Logic a => a -> a -> a -> a -> a
 isGuiltyProb bodyFoundProb hasMotiveProb atTheSceneProb hasMurderWeaponProb = 
   bodyFoundProb `_and`
   hasMotiveProb `_and`
   hasMurderWeaponProb `_and`
-  atTheSceneProb
+  atTheSceneProb-}
 
 --Belnap Algorithm
 data Belnap = Yes | No | Both | Neither deriving Show
@@ -194,12 +194,12 @@ onPersonBelnap =  Yes
 hasMurderWeaponBelnap :: Belnap
 hasMurderWeaponBelnap = hasMurderWeapon weaponIDedBelnap onPersonBelnap
 
-isGuiltyBelnap :: Logic a => a -> a -> a -> a -> a
+{-isGuiltyBelnap :: Logic a => a -> a -> a -> a -> a
 isGuiltyBelnap bodyFoundBelnap hasMotiveBelnap atTheSceneBelnap hasMurderWeaponBelnap = 
   bodyFoundBelnap `_and`
   hasMotiveBelnap `_and`
   hasMurderWeaponBelnap `_and`
-  atTheSceneBelnap
+  atTheSceneBelnap-}
 
 --Clue Command Line
 main :: IO ()
@@ -212,39 +212,38 @@ main = do
                                 "4. Belnap / Four-Valued / Relevance Logic"]
   response <- promptLine "Pick a logic [1-4] from the above list, or anything else to exit: "
   when (response == "1") $ do
-      linebreak
-      mappedString ["I am trying out IO. Do you want automatic or manual?",
+    linebreak
+    mappedString ["Do you want automatic or manual?",
                             "1. Automatic",
                             "2. Manual"]
-      response <- promptLine "Pick one or two from the above: "
-      when (response == "1") $ do
-        linebreak
-        mappedString [guiltString ++ "Boolean Logic? ",
+    userAnswer <- promptLine "Do you want to see an automatic answer or map your own? Pick 1 for automatic or 2 for manual. "
+    when (userAnswer == "1") $ do
+      mappedString [guiltString ++ "Boolean Logic? ",
                                   show $ isGuilty bodyFoundBool hasMotiveBool atTheSceneBool hasMurderWeaponBool,
                                   "All four conditions were true. Therefore, the suspect is guilty."]
-        linebreak >> main
-      when (response == "2") $ do
-        linebreak
-        mappedString ["Answer the following questions with True or False."]
-        bodyfound <- promptLine "Was a body found? "
-        motive <- promptLine "Was there a motive? "
-        murderweapon <- promptLine "Was there a weapon? "
-        atscene <- promptLine "Was the suspect at the scene? "
-        putStrLn $ show $ isGuiltyIO bodyfound motive murderweapon atscene
-        linebreak >> main
+      linebreak >> main
+    when (userAnswer == "2") $ do
+      linebreak
+      mappedString ["Answer the following questions with True or False."] --Parse error if input is anything except True or False
+      bodyfound <- promptLine "A body was found: "
+      motive <- promptLine "There is a motive: "
+      scene <- promptLine "The suspect was at the crimescene:  "
+      weapon <- promptLine "There is a murder weapon: "
+      print $ isGuiltyIO bodyfound motive scene weapon
+      linebreak >> main
   when (response == "2") $ do
     mappedString [guiltString ++ "Ternary Logic? ",
-                                  show $ isGuiltyKleene bodyFoundKleene hasMotiveKleene hasMurderWeaponKleene atTheSceneKleene,
+                                  show $ isGuilty bodyFoundKleene hasMotiveKleene hasMurderWeaponKleene atTheSceneKleene,
                                   "Ternary Logic factors in the false eyewitness and unknown alibi."]
     uncertainGuilt >> linebreak >> main
   when (response == "3") $ do
     mappedString [guiltString ++ "Probabilistic Logic? ",
-                                  show $ isGuiltyProb bodyFoundProb hasMotiveProb atTheSceneProb hasMurderWeaponProb,
+                                  show $ isGuilty bodyFoundProb hasMotiveProb atTheSceneProb hasMurderWeaponProb,
                                   "Probabilistic Logic introduces certainty from 0 to 1, or a percentage or likeliness of guilt."]
     uncertainGuilt >> linebreak >> main
   when (response == "4") $ do
     mappedString [guiltString ++ "Relevance Logic? ",
-                                  show $ isGuiltyBelnap bodyFoundBelnap hasMotiveBelnap atTheSceneBelnap hasMurderWeaponBelnap, 
+                                  show $ isGuilty bodyFoundBelnap hasMotiveBelnap atTheSceneBelnap hasMurderWeaponBelnap, 
                                   "Relevance Logic introduces a fourth variable of Neither in addition to Yes, No, and Both."]
     uncertainGuilt >> linebreak >> main
       where
@@ -253,13 +252,15 @@ main = do
         uncertainGuilt = putStrLn "Therefore, the suspect's guilt is more uncertain."
         linebreak = putStrLn ("Change the facts of the murder in the codebase to see different outcomes.\n" ++
                                               "-------------------------------------------------------------------------\n\n")
-        isGuiltyIO bodyFound hasMotive hasWeapon atScene = 
-          read (bodyFound) &&
-          read (hasMotive) &&
-          read (hasWeapon) &&
-          read (atScene)
-
+        
 promptLine :: String -> IO String
 promptLine prompt = do
     putStr prompt
     getLine
+
+isGuiltyIO :: String -> String -> String -> String -> Bool
+isGuiltyIO bodyfound motive scene weapon =  
+  read bodyfound &&
+  read motive &&
+  read scene &&
+  read weapon
